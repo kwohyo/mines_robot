@@ -16,18 +16,19 @@ def play_audio(fs, audio):
     sd.wait()
 
 def main():
-    while True:
-        input("Press Enter to start recording, then press Enter again to stop.")
-        
-        # 음성 데이터 녹음
-        duration = 5  # 녹음 시간 (초)
-        audio_data = record_audio(duration)
-        
-        # 서버로 음성 데이터 전송
-        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-            s.connect((SERVER_IP, PORT))
-            s.sendall(audio_data.tobytes())
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((SERVER_IP, PORT))
+
+        while True:
+            input("Press Enter to start recording, then press Enter again to stop.")
             
+            # 음성 데이터 녹음
+            duration = 5  # 녹음 시간 (초)
+            audio_data = record_audio(duration)
+            
+            # 서버로 음성 데이터 전송
+            s.sendall(audio_data.tobytes())
+                
             # 서버로부터 LLM 응답 수신
             response_data = s.recv(4096)
             response_audio = np.frombuffer(response_data, dtype='float32')
