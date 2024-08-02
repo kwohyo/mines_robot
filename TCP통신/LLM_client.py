@@ -1,3 +1,6 @@
+# import sys
+# sys.path.append('/home/ubuntu/Desktop/mines_lab/mines_robot')
+
 import socket
 import wave
 from MIC.microphone import ReSpeaker_Mic_Array_v2
