@@ -1,13 +1,11 @@
-# DOA.py, VAD.py 라이브러리
 from tuning import Tuning
 import usb.core
 import usb.util
 import time
-
-# record.py 라이브러리
 import pyaudio
 import wave
 import numpy as np
+from playsound import playsound
 
 
 
@@ -140,6 +138,33 @@ class ReSpeaker_Mic_Array_v2():
         wf.writeframes(b''.join(frames))
         wf.close()
 
+
+    def read_frames(self, f):
+        '''
+        wav 파일에서 CHUNK 사이즈만큼 값을 읽어오고 반환하는 것을 파일의 끝(end)까지 반복하는 함수
+        '''
+        d = f.readframes(self.CHUNK)
+        while d:
+            yield d
+            d = f.readframes(self.CHUNK)
+        f.close()
+
+
+    def play(self):
+        '''
+        녹음한 wav 파일을 재생하는 함수
+        '''
+
+        '''f = wave.open(self.WAVE_OUTPUT_FILENAME, 'rb')
+        rate = f.getframerate()
+        channels = f.getnchannels()
+        width = f.getsampwidth()
+
+        data = self.read_frames(f)'''
+
+        print("*** Playing a WAV file...")
+        playsound(self.WAVE_OUTPUT_FILENAME)
+
         
 
 if __name__ == '__main__':
@@ -152,4 +177,7 @@ if __name__ == '__main__':
 
     # extract voice
     mic.record()
+
+    # play a wav file
+    mic.play()
 
