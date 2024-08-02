@@ -1,3 +1,6 @@
+# import sys
+# sys.path.append('/home/ubuntu/Desktop/mines_lab/mines_robot')
+
 from tuning import Tuning
 import usb.core
 import usb.util
