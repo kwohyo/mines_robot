@@ -9,7 +9,7 @@ import types
 
 
 
-class ReSpeaker_Mic_Array_v2():
+class ReSpeaker_Mic_Array_v2:
     '''
     ReSpeaker Mic Array v2.0 마이크의 기능을 모아둔 클래스
     '''
@@ -20,7 +20,6 @@ class ReSpeaker_Mic_Array_v2():
         self.RESPEAKER_WIDTH = 2
         self.CHUNK = 1024
         self.RECORD_SECONDS = 3 # 녹음 시간(초)
-        self.WAVE_OUTPUT_FILENAME = "output.wav"
         self.RESPEAKER_INDEX = self.getDeviceInfo()
         self.VENDER_ID = 0x2886
         self.PRODUCT_ID = 0x0018
@@ -86,7 +85,7 @@ class ReSpeaker_Mic_Array_v2():
             print('[Error] VAD was not detected.')
 
 
-    def record(self):
+    def record(self, output_wav_filename):
         '''
         마이크로 소리를 녹음하는 함수
         '''
@@ -131,7 +130,7 @@ class ReSpeaker_Mic_Array_v2():
         stream.close()
         p.terminate()
 
-        wf = wave.open(self.WAVE_OUTPUT_FILENAME, 'wb')
+        wf = wave.open(output_wav_filename, 'wb')
         wf.setnchannels(1)
         wf.setsampwidth(p.get_sample_size(p.get_format_from_width(self.RESPEAKER_WIDTH)))
         wf.setframerate(self.RESPEAKER_RATE)
@@ -161,7 +160,7 @@ class ReSpeaker_Mic_Array_v2():
         return frames
 
 
-    def _play(self, data, rate = 16000, channels = 1, width = 2):
+    def _play(self, data, rate = 16000, channels = 6, width = 2):
         '''
         wav 파일에서 읽어온 데이터를 재생하는 함수
         '''
@@ -212,9 +211,9 @@ if __name__ == '__main__':
     VAD = mic.vad()
 
     # extract voice
-    mic.record()
+    output_wav_filename = 'output.wav' # 음성 녹음한 결과 wav 파일
+    mic.record(output_wav_filename)
 
     # play a wav file
     wav_filename = 'output.wav' # 재생하고 싶은 wav 파일
     mic.play(wav_filename)
-
