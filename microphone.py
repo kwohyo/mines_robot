@@ -5,7 +5,7 @@ import time
 import pyaudio
 import wave
 import numpy as np
-from playsound import playsound
+import types
 
 
 
@@ -150,20 +150,45 @@ class ReSpeaker_Mic_Array_v2():
         f.close()
 
 
-    def play(self):
+    def _play(self, data, rate = 16000, channels = 1, width = 2):
         '''
-        녹음한 wav 파일을 재생하는 함수
+        wav 파일에서 읽어온 데이터를 재생하는 함수
         '''
 
-        '''f = wave.open(self.WAVE_OUTPUT_FILENAME, 'rb')
+        p = pyaudio.PyAudio()
+
+        stream = p.open(
+                    rate = rate,
+                    format = p.get_format_from_width(width),
+                    channels = channels,
+                    output = True,
+                    output_device_index = self.RESPEAKER_INDEX,
+                    frames_per_buffer = self.CHUNK,)
+        
+        if isinstance(data, types.GeneratorType):
+            for d in data:
+                stream.write(d)
+        else:
+            stream.write(data)
+
+        stream.close()
+
+
+    def play(self):
+        '''
+        wav 파일을 재생하는 함수
+        '''
+
+        print("*** Playing a WAV file...")
+        f = wave.open(self.WAVE_OUTPUT_FILENAME, 'rb')
         rate = f.getframerate()
         channels = f.getnchannels()
         width = f.getsampwidth()
 
-        data = self.read_frames(f)'''
-
-        print("*** Playing a WAV file...")
-        playsound(self.WAVE_OUTPUT_FILENAME)
+        data = self.read_frames(f)
+        self._play(data, rate, channels, width)
+        
+        print("*** Done playing a WAV file.")
 
         
 
