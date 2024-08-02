@@ -1,4 +1,4 @@
-from MIC.tuning import Tuning
+from tuning import Tuning
 import usb.core
 import usb.util
 import time
