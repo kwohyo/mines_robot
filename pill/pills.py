@@ -1,7 +1,7 @@
 import cv2
 from ultralytics import YOLO
 
-model = YOLO('C:/MINESLAB/yolov8-face/runs/detect/train2/weights/best.pt')
+model = YOLO('C:/MINESLAB/yolov8-face/runs/detect/train2/weights/best.pt') # best.pt의 경로
 
 cap=cv2.VideoCapture(0)
 
